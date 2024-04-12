@@ -30,7 +30,7 @@
                 ></textarea>
                 </fieldset>
                 <fieldset class="form-group">
-                    <input type="text" name="tags[]" class="form-control" placeholder="Enter tags" />
+                    <input type="text" name="tags" class="form-control" placeholder="Enter tags (comma separated)" />
                 <div class="tag-list">
                     @foreach ($post->tags as $tag)
                     <a href="{{route('conduit.detachTag', ['post' => $post->id, 'tag' => $tag->id ])}}" class="tag-default tag-pill">
