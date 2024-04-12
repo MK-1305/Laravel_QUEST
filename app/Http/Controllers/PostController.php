@@ -53,26 +53,29 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'about' => 'required|max:255',
-            'content' => 'required',
+            'title' => 'nullable|max:255',
+            'about' => 'nullable|max:255',
+            'content' => 'nullable',
             'tags' => 'nullable|string',
         ]);
-        // タイトル、概要、本文のいずれかに入力がある場合のみ更新処理を行う
-        if ($request->filled('title') || $request->filled('about') || $request->filled('content')) {
-            $post->update($validatedData);
-        } else {
-            return redirect()->route('conduit.index')->with('success','');
-        }
+
+        $post->title = $request->filled('title') ? $request->input('title') : $post->title;
+        $post->about = $request->filled('about') ? $request->input('about') : $post->about;
+        $post->content = $request->filled('content') ? $request->input('content') : $post->content;
+        $post->save();
+
         // タグの更新処理(storeと同じ)
         $post->tags()->detach();
-        $tags = explode(',', $request->input('tags'));
-        $tags = array_map('trim', $tags);
-        $tags = array_filter($tags);
-        foreach ($tags as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
-            $post->tags()->attach($tag);
+        if ($request->filled('tags')) {
+            $tags = explode(',', $request->input('tags'));
+            $tags = array_map('trim', $tags);
+            $tags = array_filter($tags);
+            foreach ($tags as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $post->tags()->attach($tag);
+            }
         }
+
         return redirect()->route('conduit.index')->with('success', '投稿が更新されました');
     }
     public function detachTag($postId, $tagId) {
