@@ -13,10 +13,10 @@
                     <div class="feed-toggle">
                         <ul class="nav nav-pills outline-active">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('conduit.myfeed') }}">Your Feed</a>
+                                <a class="nav-link active" href="{{ route('conduit.myfeed') }}">Your Feed</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="{{ route('conduit.index')}}">Global Feed</a>
+                                <a class="nav-link" href="{{route('conduit.index')}}">Global Feed</a>
                             </li>
                         </ul>
                     </div>
