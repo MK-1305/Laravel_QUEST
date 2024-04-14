@@ -10,7 +10,16 @@ class PostController extends Controller
 {
     public function index() {
         $posts = Post::all();
-        return view('conduit.index', compact('posts'));
+        $tags = Tag::all();
+
+        return view('conduit.index', compact('posts', 'tags'));
+    }
+    public function myFeed()
+    {
+        $user = auth()->user();
+        $posts = $user->posts()->with('tags')->get();
+        $tags = Tag::all();
+        return view('conduit.index', compact('posts', 'tags'));
     }
     public function create() {
         return view('conduit.create');
@@ -23,11 +32,13 @@ class PostController extends Controller
             'tags' => 'nullable|string',
         ]);
 
-        if ($validatedData->fails()) {
-            return redirect()->back()->withErrors($validatedData)->withInput();
+        // $post = Post::create($validatedData);
+        $post = new Post($validatedData);
+        $post->user_id = auth()->id();
+        if (!$post->user_id) {
+            return redirect()->back()->withErrors(['error' => 'ログインが必要です。']);
         }
-
-        $post = Post::create($validatedData);
+        $post->save();
         // カンマ区切りで配列に入れる
         $tags = explode(',', $request->input('tags'));
         // 各タグの前後の空白を削除
