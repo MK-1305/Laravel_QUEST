@@ -38,6 +38,12 @@
 
 以前作成した RealWorld のコードに、テストコードを追加しましょう。
 
+以下のコマンドで HTTP リクエスト&投稿テストを実行します
+
+```bash
+sail php artisan test tests/Feature/PostControllerTest.php
+```
+
 ステップ 1
 以前作成した RealWorld のコードに、テストコードを 1 つでよいので書いてください。
 ・HTTP リクエスト
